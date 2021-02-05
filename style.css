@@ -1,0 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+
+*{
+	font-family: 'Lobster', cursive;
+	margin: 0;
+	padding: 0;
+}
+
+html{
+	-webkit-user-select: none;
+	-webkit-user-drag: none;
+}
