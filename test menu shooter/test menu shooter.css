@@ -1,0 +1,32 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+
+html{
+	-webkit-user-select: none;
+	-webkit-user-drag: none;
+}
+
+main {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+    flex-basis: 100%;
+}
+
+.bouton_lasers {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	background-color:transparent;
+	border-color: #546E7A;
+	color: #546E7A;
+	padding: 15px 32px;
+	font-size: 16px;
+	display: block;
+}
+
+#vaisseau1 {
+    background-image: url('img/Vaisseau1.png');
+}
