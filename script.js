@@ -6,6 +6,7 @@ ctx = canvas.getContext('2d');
 var sprite_vaisseau = document.getElementById("vaisseau");
 var sprite_laser = document.getElementById("laser");
 var sprite_alien = document.getElementById("alien")
+var sprite_explosion = document.getElementById("explosion")
 
 // Etoiles
 
@@ -37,8 +38,6 @@ function Creer_Etoile(){
 
 function Dessiner_etoile(){
     update_etoile()
-    // ctx.fillStyle = 'rgba(0,0,0,0.4)';
-    // ctx.fillRect(0,0,canvas.width,canvas.height)
     for(let i=0; i<Tableau_etoiles.length; i++){
         ctx.beginPath();
         ctx.arc(Tableau_etoiles[i].posX, Tableau_etoiles[i].posY, Tableau_etoiles[i].radius, 0, 360);
@@ -60,10 +59,9 @@ function update_etoile(){
 
 // Vaisseau
 
-var start_vaisseau = canvas.height / 2;
-var vaisseau_atksp = 0.3; //nb d'attaques par seconde
+var vaisseau_atksp = 0.3;
 var vaisseau_posX = 50;
-var vaisseau_posY = start_vaisseau;
+var vaisseau_posY = canvas.height / 2;
 
 function Dessiner_vaisseau()
 {
@@ -198,6 +196,7 @@ function test_colision_laser(){
 
             if(hitbox_laser.x < hitbox_alien.x + hitbox_alien.width && hitbox_laser.x + hitbox_laser.width > hitbox_alien.x && hitbox_laser.y < hitbox_alien.y + hitbox_alien.height && hitbox_laser.y + hitbox_laser.height > hitbox_alien.y){
                 Tableau_alien.splice(j,1);
+                
                 Tableau_laser.splice(i,1)
                 nb_alien -=1;
             }            
@@ -272,11 +271,8 @@ function touche_presse(e)
     else check_R = false;
 
     if(e.keyCode == '38') check_haut = true //haut
-    // else if(e.keyCode == '32' && check_haut == true) check_space = true // haut + tir
     else if(e.keyCode == '37' && check_haut == true) check_gauche = true; //diagonale haut-gauche
-    // else if(e.keyCode == '32' && check_haut == true && check_gauche == true) check_space = true; //diagonale haut-gauche + tir
     else if(e.keyCode == '39' && check_haut == true) check_droite = true; //diagonale haut-droite
-    // else if(e.keyCode == '32' && check_haut == true && check_droite == true) check_space = true; //diagonale haut-droite + tir
     else check_haut = false;
 
     if(e.keyCode == '40') check_bas = true; //bas
