@@ -1,7 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
-
 *{
-	font-family: 'Lobster', cursive;
 	margin: 0;
 	padding: 0;
 }
@@ -9,14 +6,91 @@
 html{
 	-webkit-user-select: none;
 	-webkit-user-drag: none;
-	overflow: hidden;
 }
 
-img{
+.cache{
 	display: none;
 }
 
 body{
 	background: rgb(52,9,78);
 	background: linear-gradient(90deg, rgba(52,9,78,1) 0%, rgba(51,21,79,1) 70%, rgba(47,1,87,1) 100%);
+	overflow: hidden;
+}
+
+#Score{
+	display: none;
+	font-size: 2em;
+	color: white;
+	text-shadow: 0 2px 2px rgba(125,0,0,.51),
+	0 0 10px rgba(0,0,255,1),
+	0 0 10px rgba(0,0,255,1); 
+	position: absolute;
+	right: 10px;
+	top: 10px;
+}
+
+main {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+p {
+	user-select: none;
+	font-family: arial;
+	font-size: 1em;
+	font-weight: bold;
+	font-variant-numeric: tabular-nums;
+	margin: 10px;
+	color: #e4e4e4;
+	text-shadow: 0 2px 2px rgba(125,0,0,.51),
+	  0 0 10px rgba(0,0,255,1),
+	  0 0 10px rgba(0,0,255,1); 
+	text-align: center;
+}
+
+#Titre {
+	font-size: 2em;
+	margin-top: 5%;
+	margin-bottom: 2%;
+}
+
+section{
+	z-index: 2;
+}
+
+.bouton_vaisseau{
+	margin-top: 1%;
+	margin-left: 40%;
+	margin-right: 40%;
+	margin-bottom: 10px;
+	display: flex;
+	flex-direction: row;
+}
+
+.bouton_vaisseau > button {
+	background-color:transparent;
+	border-color: #e4e4e4;
+	width: 60%;
+	height: 180px;
+}
+
+.bouton_laser{
+	margin-left: 40%;
+	margin-right: 40%;
+	display: flex;
+	flex-direction: column;
+}
+
+.bouton_laser > button {
+	width: 100%;
+	background-color:transparent;
+	border-color: #e4e4e4;
+	height: 30px;
+}
+
+#shooter{
+	position: absolute;
+	z-index: 1;
 }

@@ -2,18 +2,50 @@
 <html>
     <head>
         <meta charset="utf-8">
-		<title>shooter nul</title>
+		<title>Shooter de fou</title>
 		<link rel="reset" href="http://meyerweb.com/eric/tools/css/reset/">
 		<link rel="stylesheet" href="style.css">
 		<script src='script.js' async></script>
     </head>
     <body>
-        <img id="vaisseau" src="img/Vaisseau2.png">
-        <img id="laser" src="img/laser orange.png">
-        <img id="alien" src="img/Alien1.png">
-        <img id="explosion" src="img/explosion.png">
-        <main>
-            <canvas id="shooter"></canvas>
-        </main>
+		<main>
+			<img id="vaisseau_jeu1" class="cache" src="img/Vaisseau1.png">
+			<img id="vaisseau_jeu2" class="cache" src="img/Vaisseau2.png">
+			<img id="laser_jeu1" class="cache" src="img/laser bleu.png">
+			<img id="laser_jeu2" class="cache" src="img/laser orange.png">
+			<img id="laser_jeu3" class="cache" src="img/laser vert.png">
+			<img id="laser_jeu4" class="cache" src="img/laser rouge.png">
+			<img id="alien" class="cache" src="img/Alien1.png">
+			<img id="explosion" class="cache" src="img/Explosion.png">
+			<img id="bonus" class="cache" src="img/bonus.png">
+			<img id="coeur" class="cache" src="img/coeur de fou.png">
+			<section id="Score">
+				<p>Score : </p>
+			</section>
+			<section id="Menu">
+				<section>
+					<p id="Titre">Shooter de fou</p>
+				</section>
+				<section>
+					<p>Instructions :</p>
+					<p>Fleches directionnelles pour bouger</p>
+					<p>Barre d'espace pour tirer</p>
+					<p>Bouton R pour reset</p>
+					<p>Appuyez sur Entrée pour lancer le jeu</p>
+					<p>Cliquer sur les boutons en dessous pour choisir son vaisseau / couleur laser</p>
+				</section>
+				<section class="bouton_vaisseau">
+					<button id='vaisseau1'><img src="img/Vaisseau1menu.png"/></button>
+					<button id='vaisseau2'><img src="img/Vaisseau2menu.png"/></button>
+				</section>
+				<section class="bouton_laser">
+					<button id='laser1'><img src="img/laser bleu.png"/></button>
+					<button id='laser2'><img src="img/laser orange.png"/></button>
+					<button id='laser3'><img src="img/laser vert.png"/></button>
+					<button id='laser4'><img src="img/laser rouge.png"/></button>
+				</section>	
+			</section>			
+			<canvas id="shooter"></canvas>	
+		</main>		
     </body>
 </html>

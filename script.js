@@ -3,10 +3,27 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 ctx = canvas.getContext('2d');
 
-var sprite_vaisseau = document.getElementById("vaisseau");
-var sprite_laser = document.getElementById("laser");
+var ost = new Audio('ostdefou.mp3')
+ost.volume = 0.04;
+
+var sprite_vaisseau = document.getElementById("vaisseau_jeu1");
+var sprite_laser = document.getElementById("laser_jeu1");
 var sprite_alien = document.getElementById("alien")
 var sprite_explosion = document.getElementById("explosion")
+var sprite_bonus = document.getElementById("bonus")
+var sprite_coeur = document.getElementById("coeur")
+
+var menu = document.getElementById("Menu")
+var aff_score = document.getElementById("Score")
+
+var vaisseau1 = document.querySelector('#vaisseau1');
+var vaisseau2 = document.querySelector('#vaisseau2');
+
+var laser1 = document.querySelector('#laser1');
+var laser2 = document.querySelector('#laser2');
+var laser3 = document.querySelector('#laser3');
+var laser4 = document.querySelector('#laser4');
+
 
 // Etoiles
 
@@ -30,7 +47,7 @@ function Creer_Etoile(){
     etoile.posX = Math.floor(Math.random() * canvas.width - ( etoile.taille / 2));
     etoile.posY = Math.floor(Math.random() * canvas.height);
     etoile.radius = Math.random() * 1.2;
-    etoile.couleur = couleur_range[Math.floor(Math.random(0,couleur_range.length - 1))];
+    etoile.couleur = couleur_range[Math.floor(Math.random(0,couleur_range.length))];
     etoile.saturation = Math.floor(Math.random(50,100));
     UneEtoile = etoile   ;
     Tableau_etoiles.push(UneEtoile);
@@ -62,59 +79,65 @@ function update_etoile(){
 var vaisseau_atksp = 0.3;
 var vaisseau_posX = 50;
 var vaisseau_posY = canvas.height / 2;
+var nb_vie = 3;
+var nb_tirs = 1;
+var vitesse_vaisseau = 10;
+var colision_vaisseau = false;
 
 function Dessiner_vaisseau()
 {
     update_vaisseau();
     test_colision_vaisseau();
+    if(colision_vaisseau == true) ctx.globalAlpha = 0.4
     ctx.drawImage(sprite_vaisseau, vaisseau_posX, vaisseau_posY);
+    ctx.globalAlpha = 1.0
 }
 
 function update_vaisseau()
 {
     if (check_haut == true){
         if (check_gauche == true){
-            if (vaisseau_posX - 5 >= 0) vaisseau_posX -= 5;
-            if (vaisseau_posY - 5 >= 0) vaisseau_posY -= 5;
+            if (vaisseau_posX - vitesse_vaisseau >= 0) vaisseau_posX -= vitesse_vaisseau;
+            if (vaisseau_posY - vitesse_vaisseau >= 0) vaisseau_posY -= vitesse_vaisseau;
         }
         else if (check_droite == true){
-            if (vaisseau_posX + 5 <= canvas.width - 50) vaisseau_posX += 5;
-            if (vaisseau_posY - 5 >= 0) vaisseau_posY -= 5;
+            if (vaisseau_posX + vitesse_vaisseau <= canvas.width - sprite_vaisseau.width) vaisseau_posX += vitesse_vaisseau;
+            if (vaisseau_posY - vitesse_vaisseau >= 0) vaisseau_posY -= vitesse_vaisseau;
         }
-        else if (vaisseau_posY - 5 >= 0) vaisseau_posY -= 5;
+        else if (vaisseau_posY - vitesse_vaisseau >= 0) vaisseau_posY -= vitesse_vaisseau;
     }
     else if (check_bas == true){
         if (check_gauche == true){
-            if (vaisseau_posX - 5 >= 0) vaisseau_posX -= 5;
-            if (vaisseau_posY +5 <= canvas.height - 50) vaisseau_posY += 5;
+            if (vaisseau_posX - vitesse_vaisseau >= 0) vaisseau_posX -= vitesse_vaisseau;
+            if (vaisseau_posY +vitesse_vaisseau <= canvas.height - sprite_vaisseau.height) vaisseau_posY += vitesse_vaisseau;
         }
         else if (check_droite == true){
-            if (vaisseau_posX + 5 <= canvas.width - 50) vaisseau_posX += 5;
-            if (vaisseau_posY +5 <= canvas.height - 50) vaisseau_posY += 5;
+            if (vaisseau_posX + vitesse_vaisseau <= canvas.width - sprite_vaisseau.width) vaisseau_posX += vitesse_vaisseau;
+            if (vaisseau_posY +vitesse_vaisseau <= canvas.height - sprite_vaisseau.height) vaisseau_posY += vitesse_vaisseau;
         }
-        else if (vaisseau_posY +5 <= canvas.height - 50) vaisseau_posY += 5; 
+        else if (vaisseau_posY +vitesse_vaisseau <= canvas.height - sprite_vaisseau.height) vaisseau_posY += vitesse_vaisseau; 
     } 
     else if (check_gauche == true){
         if (check_haut == true){
-            if (vaisseau_posY - 5 >= 0) vaisseau_posY -= 5;
-            if (vaisseau_posX - 5 >= 0) vaisseau_posX -= 5;
+            if (vaisseau_posY - vitesse_vaisseau >= 0) vaisseau_posY -= vitesse_vaisseau;
+            if (vaisseau_posX - vitesse_vaisseau >= 0) vaisseau_posX -= vitesse_vaisseau;
         }
         else if (check_bas == true){
-            if (vaisseau_posY +5 <= canvas.height - 50) vaisseau_posY += 5
-            if (vaisseau_posX - 5 >= 0) vaisseau_posX -= 5;
+            if (vaisseau_posY +vitesse_vaisseau <= canvas.height - sprite_vaisseau.height) vaisseau_posY += vitesse_vaisseau
+            if (vaisseau_posX - vitesse_vaisseau >= 0) vaisseau_posX -= vitesse_vaisseau;
         }
-        else if (vaisseau_posX - 5 >= 0) vaisseau_posX -= 5;
+        else if (vaisseau_posX - vitesse_vaisseau >= 0) vaisseau_posX -= vitesse_vaisseau;
     } 
     else if (check_droite == true){
         if (check_haut == true){
-            if (vaisseau_posY - 5 >= 0) vaisseau_posY -= 5;
-            if (vaisseau_posX + 5 <= canvas.width - 50) vaisseau_posX += 5;
+            if (vaisseau_posY - vitesse_vaisseau >= 0) vaisseau_posY -= vitesse_vaisseau;
+            if (vaisseau_posX + vitesse_vaisseau <= canvas.width - sprite_vaisseau.width) vaisseau_posX += vitesse_vaisseau;
         }
         else if (check_bas == true){
-            if (vaisseau_posY +5 <= canvas.height - 50) vaisseau_posY += 5
-            if (vaisseau_posX + 5 <= canvas.width - 50) vaisseau_posX += 5;
+            if (vaisseau_posY +vitesse_vaisseau <= canvas.height - sprite_vaisseau.height) vaisseau_posY += vitesse_vaisseau;
+            if (vaisseau_posX + vitesse_vaisseau <= canvas.width - sprite_vaisseau.width) vaisseau_posX += vitesse_vaisseau;
         }
-        else if (vaisseau_posX + 5 <= canvas.width - 50) vaisseau_posX += 5;       
+        else if (vaisseau_posX + vitesse_vaisseau <= canvas.width - sprite_vaisseau.width) vaisseau_posX += vitesse_vaisseau;       
     }
 }
 
@@ -133,9 +156,21 @@ function test_colision_vaisseau(){
         height = sprite_alien.height;
         let hitbox_alien = {x,y,width,height};
 
-        if(hitbox_vaisseau.x < hitbox_alien.x + hitbox_alien.width && hitbox_vaisseau.x + hitbox_vaisseau.width > hitbox_alien.x && hitbox_vaisseau.y < hitbox_alien.y + hitbox_alien.height && hitbox_vaisseau.y + hitbox_vaisseau.height > hitbox_alien.y){
-            console.log("colision")
+        if(hitbox_vaisseau.x < hitbox_alien.x + hitbox_alien.width && hitbox_vaisseau.x + hitbox_vaisseau.width > hitbox_alien.x && hitbox_vaisseau.y < hitbox_alien.y + hitbox_alien.height && hitbox_vaisseau.y + hitbox_vaisseau.height > hitbox_alien.y && colision_vaisseau == false){
+            test_mort(i);
         }
+    }
+}
+
+function test_mort(i){
+    if(nb_vie > 0){
+        Tableau_alien.splice(i,1);
+        colision_vaisseau = true;
+        setTimeout(function(){colision_vaisseau = false}, 500)
+        nb_vie -=1;
+    }
+    else{
+        Reset_jeu();
     }
 }
 
@@ -152,13 +187,38 @@ function delay_laser(){
 function creer_laser(){
     if(check_space == true && laser_tire == false){
         laser_tire = true;
-        laser = {}
-        laser.posX = vaisseau_posX + sprite_vaisseau.width;
-        laser.posY = vaisseau_posY + sprite_vaisseau.width/2;
-        Tableau_laser.push(laser);
+        if (nb_tirs == 1){
+            laser = {}
+            laser.posX = vaisseau_posX + sprite_vaisseau.width;
+            laser.posY = vaisseau_posY + sprite_vaisseau.height/2 - sprite_laser.height/2;
+            Tableau_laser.push(laser);
+        }
+        else if(nb_tirs == 2){
+            laser1 = {}
+            laser2 = {}
+            laser1.posX = vaisseau_posX + sprite_vaisseau.width;
+            laser1.posY = vaisseau_posY + sprite_vaisseau.height/3 - sprite_laser.height/2;
+            laser2.posX = vaisseau_posX + sprite_vaisseau.width;
+            laser2.posY = vaisseau_posY + 2*sprite_vaisseau.height/3 - sprite_laser.height/2;
+            Tableau_laser.push(laser1);
+            Tableau_laser.push(laser2);
+        }
+        else{
+            laser1 = {}
+            laser2 = {}
+            laser3 = {}
+            laser1.posX = vaisseau_posX + sprite_vaisseau.width;
+            laser1.posY = vaisseau_posY + sprite_vaisseau.height/4 - sprite_laser.height/2;
+            laser2.posX = vaisseau_posX + sprite_vaisseau.width;
+            laser2.posY = vaisseau_posY + 2*sprite_vaisseau.height/4 - sprite_laser.height/2;
+            laser3.posX = vaisseau_posX + sprite_vaisseau.width;
+            laser3.posY = vaisseau_posY + 3*sprite_vaisseau.height/4 - sprite_laser.height/2;
+            Tableau_laser.push(laser1);
+            Tableau_laser.push(laser2);      
+            Tableau_laser.push(laser3);          
+        }
         setTimeout(delay_laser, vaisseau_atksp*1000); 
-    }
-    
+    }   
 }
 
 function Dessiner_laser(){
@@ -195,10 +255,16 @@ function test_colision_laser(){
             let hitbox_alien = {x,y,width,height};
 
             if(hitbox_laser.x < hitbox_alien.x + hitbox_alien.width && hitbox_laser.x + hitbox_laser.width > hitbox_alien.x && hitbox_laser.y < hitbox_alien.y + hitbox_alien.height && hitbox_laser.y + hitbox_laser.height > hitbox_alien.y){
+                let explosion = {};
+                explosion.x = Tableau_alien[j].posX;
+                explosion.y = Tableau_alien[j].posY;
+                explosion.ExplosionAlpha = 1;
+                explosion.sx = 0;
+                Tableau_explosions.push(explosion);
                 Tableau_alien.splice(j,1);
-                
                 Tableau_laser.splice(i,1)
                 nb_alien -=1;
+                Score+=1
             }            
         }
     }
@@ -208,17 +274,18 @@ function test_colision_laser(){
 
 var Tableau_alien = [];
 var nb_alien = 0;
-var nb_alien_max = 100;
+var nb_alien_max = canvas.height/20;
+var vitesse_alien = 7;
 
 function Creer_alien(){
     if (nb_alien < nb_alien_max){
-        nb_alien += 1;
         alien = {};
         alien.posX = canvas.width + Math.random() * 5000;
-        alien.posY = Math.floor(Math.random() * canvas.height);
+        alien.posY = Math.abs(Math.floor(Math.random() * canvas.height - sprite_alien.height));
 
         test = alien_overflow(alien.posX,alien.posY)
         if (test != true){
+            nb_alien += 1;
             Tableau_alien.push(alien);
         }
     }
@@ -254,7 +321,76 @@ function update_alien(){
             nb_alien -= 1;
             Tableau_alien.splice(i,1);
         }    
-        else Tableau_alien[i].posX -= 5;
+        else Tableau_alien[i].posX -= vitesse_alien;
+    }
+}
+
+// Bonus
+
+var Bonus = {}
+
+function Dessiner_bonus(){
+    update_bonus();
+    colision_bonus();
+    ctx.drawImage(sprite_bonus, Bonus.x, Bonus.y);
+}
+
+function update_bonus(){
+    Bonus.x -= 2
+    if(Bonus.sens == 'haut'){
+        if(Bonus.y < 0){
+            Bonus.sens = 'bas';
+            Bonus.y += 5;
+        }
+        else Bonus.y -=5;
+    }
+    else{
+        if(Bonus.y > canvas.height - sprite_bonus.height){
+            Bonus.sens = 'haut';
+            Bonus.y -= 5;
+        }
+        else Bonus.y += 5;
+    }
+}
+
+function Creer_bonus(){
+    Bonus.x = canvas.width
+    Bonus.y = Math.random() * canvas.height
+    Bonus.sens = 'haut'
+    var timeout = setTimeout(Creer_bonus, 30000)
+    if(jeu_lance == false) clearTimeout(timeout)
+}
+
+function colision_bonus(){
+    let x = vaisseau_posX;
+    let y = vaisseau_posY;
+    let width = sprite_vaisseau.width;
+    let height = sprite_vaisseau.height;
+    let hitbox_vaisseau = {x,y,width,height};
+
+    x = Bonus.x;
+    y = Bonus.y;
+    width = sprite_bonus.width;
+    height = sprite_bonus.height;
+    let hitbox_sprite = {x,y,width,height};
+
+    if(hitbox_vaisseau.x < hitbox_sprite.x + hitbox_sprite.width && hitbox_vaisseau.x + hitbox_vaisseau.width > hitbox_sprite.x && hitbox_vaisseau.y < hitbox_sprite.y + hitbox_sprite.height && hitbox_vaisseau.y + hitbox_vaisseau.height > hitbox_sprite.y){
+        Bonus = {};
+        if (nb_tirs < 3) nb_tirs += 1;
+    }
+}
+
+// Explosions
+
+var Tableau_explosions = [];
+var ExplosionMAXWidth = sprite_explosion.width;
+
+function Dessiner_explosion(){
+    for(let i=0; i<Tableau_explosions.length; i++){
+        ctx.drawImage(sprite_explosion,Tableau_explosions[i].sx,0, 96,sprite_explosion.height, Tableau_explosions[i].x, Tableau_explosions[i].y, 96, sprite_explosion.height);
+        Tableau_explosions[i].sx += 96
+        Tableau_explosions[i].ExplosionAlpha = Tableau_explosions[i].ExplosionAlpha / 1.08
+        if(Tableau_explosions[i].ExplosionAlpha <= 0.001) Tableau_explosions.splice(i,1) 
     }
 }
 
@@ -264,31 +400,54 @@ var check_bas, check_droite, check_gauche, check_haut, check_R, check_space;
 
 function touche_presse(e)
 {
-    if(e.keyCode == '32') check_space = true;
-    else check_space = false;
+    // if(e.keyCode == '32') check_space = true;
+    // else check_space = false;
 
-    if(e.keyCode == '82') check_R = true;
-    else check_R = false;
+    // if(e.keyCode == '82') Reset_jeu();
 
-    if(e.keyCode == '38') check_haut = true //haut
-    else if(e.keyCode == '37' && check_haut == true) check_gauche = true; //diagonale haut-gauche
-    else if(e.keyCode == '39' && check_haut == true) check_droite = true; //diagonale haut-droite
-    else check_haut = false;
+    // if(e.keyCode == '38') check_haut = true //haut
+    // else if(e.keyCode == '37' && check_haut == true) check_gauche = true; //diagonale haut-gauche
+    // else if(e.keyCode == '39' && check_haut == true) check_droite = true; //diagonale haut-droite
+    // else check_haut = false;
 
-    if(e.keyCode == '40') check_bas = true; //bas
-    else if(e.keyCode == '37' && check_bas == true) check_gauche = true; //diagonale bas-gauche
-    else if(e.keyCode == '39' && check_bas == true) check_droite = true; //diagonale bas-droite
-    else check_bas = false;
+    // if(e.keyCode == '40') check_bas = true; //bas
+    // else if(e.keyCode == '37' && check_bas == true) check_gauche = true; //diagonale bas-gauche
+    // else if(e.keyCode == '39' && check_bas == true) check_droite = true; //diagonale bas-droite
+    // else check_bas = false;
 
-    if(e.keyCode == '37') check_gauche = true; //gauche
-    else if(e.keyCode == '40' && check_gauche == true) check_bas = true; //diagonale bas-gauche
-    else if(e.keyCode == '38' && check_gauche == true) check_haut = true;  //diagonale haut-gauche
-    else check_gauche = false;
+    // if(e.keyCode == '37') check_gauche = true; //gauche
+    // else if(e.keyCode == '40' && check_gauche == true) check_bas = true; //diagonale bas-gauche
+    // else if(e.keyCode == '38' && check_gauche == true) check_haut = true;  //diagonale haut-gauche
+    // else check_gauche = false;
 
-    if(e.keyCode == '39') check_droite = true; //droite
-    else if(e.keyCode == '40' && check_droite == true) check_bas = true; //diagonale bas-droite
-    else if(e.keyCode == '38' && check_droite == true) check_haut = true; //diagonale haut-droite
-    else check_droite = false;
+    // if(e.keyCode == '39') check_droite = true; //droite
+    // else if(e.keyCode == '40' && check_droite == true) check_bas = true; //diagonale bas-droite
+    // else if(e.keyCode == '38' && check_droite == true) check_haut = true; //diagonale haut-droite
+    // else check_droite = false;
+
+    switch(e.keyCode) {
+        case 38:
+            check_haut = true;
+            break;
+        case 40:
+            check_bas = true;
+            break;
+        case 37 :
+            check_gauche = true;
+            break;
+        case 39:
+            check_droite = true;
+            break;
+        case 32:
+            check_space = true;
+            break;
+        case 82:
+            Reset_jeu();
+            break;
+        case 13:
+            if (jeu_lance == false) Game();
+            break;
+    }
 }
 
 function touche_relache(e)
@@ -308,20 +467,99 @@ function touche_relache(e)
     else if(e.keyCode == '32') {
         check_space = false;
     }
-    if(e.keyCode == '82') {
-        check_R = false;
+}
+
+// Affichage vie
+
+function dessiner_coeur(){
+    if (nb_vie == 3){
+        ctx.drawImage(sprite_coeur,10,10);
+        ctx.drawImage(sprite_coeur,60,10);
+        ctx.drawImage(sprite_coeur,110,10);
+    }
+    else if (nb_vie == 2){
+        ctx.drawImage(sprite_coeur,10,10);
+        ctx.drawImage(sprite_coeur,60,10);
+    }
+    else ctx.drawImage(sprite_coeur,10,10);
+}
+
+
+// Button
+
+vaisseau1.addEventListener('click', function(){changer_vaisseau(1)});
+vaisseau2.addEventListener('click', function(){changer_vaisseau(2)});
+
+laser1.addEventListener('click', function(){changer_laser(1)});
+laser2.addEventListener('click', function(){changer_laser(2)});
+laser3.addEventListener('click', function(){changer_laser(3)});
+laser4.addEventListener('click', function(){changer_laser(4)});
+
+function changer_vaisseau(arg){
+    if (arg == 1) sprite_vaisseau = document.getElementById("vaisseau_jeu1");
+    else sprite_vaisseau = document.getElementById("vaisseau_jeu2");
+}
+
+function changer_laser(arg){
+    if (arg == 1) sprite_laser = document.getElementById("laser_jeu1");
+    else if (arg==2) sprite_laser = document.getElementById("laser_jeu2");
+    else if (arg==3) sprite_laser = document.getElementById("laser_jeu3");
+    else sprite_laser = document.getElementById("laser_jeu4");
+}
+
+// Fonctions de Jeu
+
+var jeu_lance = false
+var Score = 0;
+var Palier_score = 100;
+
+function update_score(){
+    aff_score.textContent = "Score : "+Score;
+    if (Score >= Palier_score){
+        vitesse_alien += 1;
+        Palier_score = Palier_score + 100
     }
 }
 
-// c'est parti
+function Reset_jeu(){
+    Tableau_laser = [];
+    Tableau_explosions = [];
+    Tableau_alien = [];
+
+    Palier_score = 100;
+    Bonus = {};
+    nb_tirs = 1;
+    nb_alien = 0;
+    vitesse_alien = 7;
+    Score = 0;
+    vaisseau_posX = 50;
+    vaisseau_posY = canvas.height / 2;
+    nb_vie = 3;
+}
 
 function Dessiner_tout(){
     ctx.clearRect(0,0,canvas.width, canvas.height);
     Dessiner_etoile();
-    Dessiner_alien();
-    Dessiner_vaisseau();
-    Dessiner_laser();
+    if (jeu_lance == true)
+    {
+        Dessiner_explosion();
+        Dessiner_bonus();
+        Dessiner_alien();
+        Dessiner_vaisseau();
+        Dessiner_laser();
+        dessiner_coeur();
+        update_score();
+    }
     requestAnimationFrame(Dessiner_tout);
+}
+
+function Game(){
+    ost.play();
+    jeu_lance = true;
+    canvas.style.position="relative"
+    aff_score.style.display="block"
+    menu.style.display="none";
+    Creer_bonus();
 }
 
 Creer_Etoiles();
