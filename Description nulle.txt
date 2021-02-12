@@ -1,0 +1,1 @@
+Shoot them up old school type 'gradius' le but étant de tuer les vaisseaux alien en faisant attention a ne pas mourrir tout simplement, chaque alien tué augmente votre score de 1 et chaque bonus ramassé permet de tirer un laser supplémentaire plus vous tuez d'alien plus il deviendra difficile de les esquiver, bon chance

@@ -3,6 +3,7 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 ctx = canvas.getContext('2d');
 
+//Mushihimesama OST - 08 The Direction to the Heart of the Forest Stage5
 var ost = new Audio('ostdefou.mp3')
 ost.volume = 0.04;
 
@@ -15,6 +16,7 @@ var sprite_coeur = document.getElementById("coeur")
 
 var menu = document.getElementById("Menu")
 var aff_score = document.getElementById("Score")
+var body = document.querySelector("body")
 
 var vaisseau1 = document.querySelector('#vaisseau1');
 var vaisseau2 = document.querySelector('#vaisseau2');
@@ -24,8 +26,10 @@ var laser2 = document.querySelector('#laser2');
 var laser3 = document.querySelector('#laser3');
 var laser4 = document.querySelector('#laser4');
 
+var fond1 = document.querySelector('#fond_espace_1');
+var fond2 = document.querySelector('#fond_espace_2');
 
-// Etoiles
+// Gestion étoiles, on crée un tableau remplie d'étoiles qui vont de droite a gauche de l'écran, lorsque qu'elles arrivent tout a gauche de la zone de dessin elle reviennent a droite
 
 var Tableau_etoiles = [];
 var taille_max = 5
@@ -49,7 +53,7 @@ function Creer_Etoile(){
     etoile.radius = Math.random() * 1.2;
     etoile.couleur = couleur_range[Math.floor(Math.random(0,couleur_range.length))];
     etoile.saturation = Math.floor(Math.random(50,100));
-    UneEtoile = etoile   ;
+    UneEtoile = etoile;
     Tableau_etoiles.push(UneEtoile);
 }
 
@@ -74,7 +78,7 @@ function update_etoile(){
     }
 }
 
-// Vaisseau
+// Gestion Vaisseau
 
 var vaisseau_atksp = 0.3;
 var vaisseau_posX = 50;
@@ -93,47 +97,47 @@ function Dessiner_vaisseau()
     ctx.globalAlpha = 1.0
 }
 
-function update_vaisseau()
+function update_vaisseau() // Lorsque l'on récupere les touches directionnelles on update les coordonnées du vaisseau en conséquence
 {
-    if (check_haut == true){
-        if (check_gauche == true){
+    if (check_haut == true){ //haut
+        if (check_gauche == true){ //haut gauche
             if (vaisseau_posX - vitesse_vaisseau >= 0) vaisseau_posX -= vitesse_vaisseau;
             if (vaisseau_posY - vitesse_vaisseau >= 0) vaisseau_posY -= vitesse_vaisseau;
         }
-        else if (check_droite == true){
+        else if (check_droite == true){ //haut droite
             if (vaisseau_posX + vitesse_vaisseau <= canvas.width - sprite_vaisseau.width) vaisseau_posX += vitesse_vaisseau;
             if (vaisseau_posY - vitesse_vaisseau >= 0) vaisseau_posY -= vitesse_vaisseau;
         }
         else if (vaisseau_posY - vitesse_vaisseau >= 0) vaisseau_posY -= vitesse_vaisseau;
     }
-    else if (check_bas == true){
-        if (check_gauche == true){
+    else if (check_bas == true){ //bas
+        if (check_gauche == true){ //bas gauche
             if (vaisseau_posX - vitesse_vaisseau >= 0) vaisseau_posX -= vitesse_vaisseau;
             if (vaisseau_posY +vitesse_vaisseau <= canvas.height - sprite_vaisseau.height) vaisseau_posY += vitesse_vaisseau;
         }
-        else if (check_droite == true){
+        else if (check_droite == true){ //bas droite
             if (vaisseau_posX + vitesse_vaisseau <= canvas.width - sprite_vaisseau.width) vaisseau_posX += vitesse_vaisseau;
             if (vaisseau_posY +vitesse_vaisseau <= canvas.height - sprite_vaisseau.height) vaisseau_posY += vitesse_vaisseau;
         }
         else if (vaisseau_posY +vitesse_vaisseau <= canvas.height - sprite_vaisseau.height) vaisseau_posY += vitesse_vaisseau; 
     } 
-    else if (check_gauche == true){
-        if (check_haut == true){
+    else if (check_gauche == true){ //gauche
+        if (check_haut == true){ //haut gauche
             if (vaisseau_posY - vitesse_vaisseau >= 0) vaisseau_posY -= vitesse_vaisseau;
             if (vaisseau_posX - vitesse_vaisseau >= 0) vaisseau_posX -= vitesse_vaisseau;
         }
-        else if (check_bas == true){
+        else if (check_bas == true){ // bas gauche
             if (vaisseau_posY +vitesse_vaisseau <= canvas.height - sprite_vaisseau.height) vaisseau_posY += vitesse_vaisseau
             if (vaisseau_posX - vitesse_vaisseau >= 0) vaisseau_posX -= vitesse_vaisseau;
         }
         else if (vaisseau_posX - vitesse_vaisseau >= 0) vaisseau_posX -= vitesse_vaisseau;
     } 
-    else if (check_droite == true){
-        if (check_haut == true){
+    else if (check_droite == true){ //droite
+        if (check_haut == true){ // droite haut
             if (vaisseau_posY - vitesse_vaisseau >= 0) vaisseau_posY -= vitesse_vaisseau;
             if (vaisseau_posX + vitesse_vaisseau <= canvas.width - sprite_vaisseau.width) vaisseau_posX += vitesse_vaisseau;
         }
-        else if (check_bas == true){
+        else if (check_bas == true){ // droite bas
             if (vaisseau_posY +vitesse_vaisseau <= canvas.height - sprite_vaisseau.height) vaisseau_posY += vitesse_vaisseau;
             if (vaisseau_posX + vitesse_vaisseau <= canvas.width - sprite_vaisseau.width) vaisseau_posX += vitesse_vaisseau;
         }
@@ -141,7 +145,8 @@ function update_vaisseau()
     }
 }
 
-function test_colision_vaisseau(){
+function test_colision_vaisseau() // Pour tester les colisions on dessine un carré de la taille du sprite du vaisseau on fait pareil pour chaque alien du tableau, puis on test si les différents carrés se croisent. Cela marche de la meme maniere pour les lasers / bonus
+{
     let x = vaisseau_posX;
     let y = vaisseau_posY;
     let width = sprite_vaisseau.width;
@@ -163,14 +168,24 @@ function test_colision_vaisseau(){
 }
 
 function test_mort(i){
-    if(nb_vie > 0){
+    if(nb_vie > 1){
         Tableau_alien.splice(i,1);
         colision_vaisseau = true;
         setTimeout(function(){colision_vaisseau = false}, 500)
         nb_vie -=1;
+        nb_tirs -= 1;
+        if(nb_tirs < 1) nb_tirs = 1
     }
     else{
-        Reset_jeu();
+        let explosion = {};
+        explosion.x = vaisseau_posX;
+        explosion.y = vaisseau_posY;
+        explosion.ExplosionAlpha = 1;
+        explosion.sx = 0;
+        Tableau_explosions.push(explosion);
+        vaisseau_posX=-1000
+        vaisseau_posY=-1000
+        setTimeout(Reset_jeu,2000);
     }
 }
 
@@ -291,7 +306,7 @@ function Creer_alien(){
     }
 }
 
-function alien_overflow(x,y)
+function alien_overflow(x,y) //Fonction permettant de tester si les alien se chevauchent lorsque l'on les crées
 {
     for(let i=0; i<Tableau_alien.length; i++){
 
@@ -484,7 +499,6 @@ function dessiner_coeur(){
     else ctx.drawImage(sprite_coeur,10,10);
 }
 
-
 // Button
 
 vaisseau1.addEventListener('click', function(){changer_vaisseau(1)});
@@ -494,6 +508,9 @@ laser1.addEventListener('click', function(){changer_laser(1)});
 laser2.addEventListener('click', function(){changer_laser(2)});
 laser3.addEventListener('click', function(){changer_laser(3)});
 laser4.addEventListener('click', function(){changer_laser(4)});
+
+fond1.addEventListener('click', function(){changer_ecran(1)});
+fond2.addEventListener('click', function(){changer_ecran(2)});
 
 function changer_vaisseau(arg){
     if (arg == 1) sprite_vaisseau = document.getElementById("vaisseau_jeu1");
@@ -505,6 +522,11 @@ function changer_laser(arg){
     else if (arg==2) sprite_laser = document.getElementById("laser_jeu2");
     else if (arg==3) sprite_laser = document.getElementById("laser_jeu3");
     else sprite_laser = document.getElementById("laser_jeu4");
+}
+
+function changer_ecran(arg){
+    if (arg == 1) body.style.backgroundImage = 'url("img/fond espace.jpg")'
+    else body.style.backgroundImage = 'url("img/fond espace 2.jpg")'
 }
 
 // Fonctions de Jeu
@@ -536,6 +558,8 @@ function Reset_jeu(){
     vaisseau_posY = canvas.height / 2;
     nb_vie = 3;
 }
+
+// Boucle de dessin si le jeu n'est pas lancé on dessine que les étoiles, des que l'on lance le jeu on dessine chaque élément du jeu classé par ordre d'importance visuelle
 
 function Dessiner_tout(){
     ctx.clearRect(0,0,canvas.width, canvas.height);
